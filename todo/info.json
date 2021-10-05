@@ -1,0 +1,21 @@
+{
+    "name": "todo",
+    "short": "Keep track of things todo",
+    "description": "A board designed for keeping track of your tasks.",
+    "end_user_data_statement": "This cog stores \"tasks\" via user ids.",
+    "install_msg": "Thank you for installing Jojo's todo cog.\nUse `[p]help ToDo` to see the commands\n\nFor bug reports, please create an issue on my github repo\nThanks :)",
+    "author": [
+        "Jojo#7791"
+    ],
+    "required_cogs": {},
+    "requirements": [
+        "git+https://github.com/Rapptz/asqlite.git"
+    ],
+    "tags": [
+        "todo", "utility"
+    ],
+    "min_bot_version": "3.4.10",
+    "hidden": false,
+    "disabled": false,
+    "type": "COG"
+}

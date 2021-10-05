@@ -1,0 +1,9 @@
+{
+    "author": [
+        "Jojo#7791"
+    ],
+    "install_msg": "Thanks for installing. This is the main repo for the todo sqlite cog. Have fun",
+    "description": "Sqlite version of todo by Jojo.",
+    "short": "Todo sqlite by Jojo",
+    "name": "todo-sqlite"
+}
