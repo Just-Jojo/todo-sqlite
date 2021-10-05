@@ -111,12 +111,10 @@ class ToDo(
 
         with suppress(RuntimeError):
             self.bot.add_dev_env_value("todo", lambda x: self)
-        log.info("Hello")
         try:
             self.cache = await TodoApi.init(self)
         except Exception as e:
             log.error(exc_info=e)
-        log.info("Hi")
         for uid in (await self.config.all_users()).keys():
             data = await self.config.user_from_id(uid).all()
             if data.get("migrated_v2"):
