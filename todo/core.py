@@ -56,7 +56,7 @@ def attach_or_in_dm(ctx: commands.Context):
 
 
 class ToDo(
-    Complete, Deleting, Miscellaneous, Settings, commands.Cog, metaclass=MetaClass
+    Complete, Deleting, Managers, Miscellaneous, SharedTodos, Settings, commands.Cog, metaclass=MetaClass
 ):
     """A todo list for keeping track of tasks you have to do
 
@@ -69,7 +69,7 @@ class ToDo(
         "Jojo#7791",
     ]
     __suggestors__ = ["Blackbird#0001"]
-    __version__ = "3.0.8.sql"
+    __version__ = "3.0.9.sql"
     _no_todo_message = (
         "You do not have any todos. You can add one with `{prefix}todo add <task>`"
     )
