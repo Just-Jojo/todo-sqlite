@@ -68,7 +68,6 @@ class TodoApi:
         self._cog: Cog
         self._commit_lock = asyncio.Lock()
         self._get_lock = asyncio.Lock()
-        self._commit_cm: AsyncContextManager
 
     @classmethod
     async def init(cls, cog: commands.Cog):
@@ -87,8 +86,12 @@ class TodoApi:
         await self._connection.close()
 
     @property
-    def _commit_cm(self):
+    def _commit_cm(self) -> AsyncContextManager:
         return dbcommit(self._connection)
+
+    @_commit_cm.setter
+    def _commit_cm(self):
+        raise RuntimeError("Hahahahahahaha.... no")
 
     async def _fill_cache(self, *, user_id: int = None):
         if not self._started:
