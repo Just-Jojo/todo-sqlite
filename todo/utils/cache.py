@@ -15,6 +15,7 @@ from redbot.core.data_manager import cog_data_path
 from contextlib import asynccontextmanager
 
 from ._statements import *
+from ._context_managers import TransactionCursor
 import logging
 
 
@@ -23,13 +24,6 @@ User = Union[int, discord.Member, discord.User]
 __all__ = [
     "TodoApi",
 ]
-
-@asynccontextmanager
-async def dbcommit(connection: asqlite.Connection):
-    try:
-        yield
-    finally:
-        await connection.commit()
 
 
 CREATE_TABLE = """CREATE TABLE IF NOT EXISTS todo (
@@ -75,7 +69,7 @@ class TodoApi:
         self._cog = cog
         data_path = cog_data_path(cog)
         self._connection = await asqlite.connect(f"{data_path}/todo.db") # type:ignore
-        self._cursor = await self._connection.cursor() # type:ignore
+        self._cursor = TransactionCursor.from_cursor(await self._connection.cursor()) # type:ignore
         await self._fill_cache()
         return self
 
@@ -85,17 +79,9 @@ class TodoApi:
         await self._cursor.close()
         await self._connection.close()
 
-    @property
-    def _commit_cm(self) -> AsyncContextManager:
-        return dbcommit(self._connection)
-
-    @_commit_cm.setter
-    def _commit_cm(self):
-        raise RuntimeError("Hahahahahahaha.... no")
-
     async def _fill_cache(self, *, user_id: int = None):
         if not self._started:
-            async with self._commit_cm:
+            async with self._cursor:
                 await self._cursor.execute(CREATE_TABLE)
             self._started = True
 
@@ -127,7 +113,7 @@ class TodoApi:
         except Exception as e:
             print(type(e))
             data = [uid] + [json.dumps(v) for v in _keys.values()] # type:ignore
-            async with self._commit_cm:
+            async with self._cursor:
                 await self._cursor.execute(CREATE_USER_DATA, *data)
             await self._fill_cache(user_id=uid)
             ret = self._data.get(uid) # type:ignore
@@ -154,7 +140,7 @@ class TodoApi:
         async with self._commit_lock:
             payload = [json.dumps(value) for value in data.values()]
             payload.append(uid) # type:ignore
-            async with self._commit_cm:
+            async with self._cursor:
                 await self._cursor.execute(UPDATE_USER, *payload)
             await self._fill_cache(user_id=uid)
 
@@ -180,7 +166,7 @@ class TodoApi:
             self._data.pop(uid) # type:ignore
         try:
             async with self._commit_lock:
-                async with self._commit_cm:
+                async with self._cursor:
                     await self._cursor.execute("DELETE FROM todo WHERE user_id = ?", uid)
         except Exception as e:
             print(type(e))
