@@ -26,10 +26,7 @@ class TransactionCursor(Cursor):
         return self
 
     async def __aexit__(self, exc_type, exc_value, traceback):
-        try:
-            if exc_type is None:
-                await self.commit()
-            else:
-                await self.rollback()
-        finally:
-            pass # Don't need to do anything here tbh
+        if exc_type is None:
+            await self.commit()
+        else:
+            await self.rollback()
