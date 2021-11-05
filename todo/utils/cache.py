@@ -56,7 +56,7 @@ _keys = {
 class TodoApi:
     def __init__(self):
         self._connection: asqlite.Connection
-        self._cursor: asqlite.Cursor
+        self._cursor: TransactionCursor
         self._started: bool = False
         self._data: Dict[str, Dict[str, Any]] = {}
         self._cog: Cog
