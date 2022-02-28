@@ -30,7 +30,6 @@ class Complete(TodoMixin):
         """Commands having to do with your completed tasks
 
 
-        \u200b
         **Arguments**
             - `indexes` Optional indexes to complete. If left at none the help command will be shown
         """
@@ -40,6 +39,7 @@ class Complete(TodoMixin):
         if not todos:
             return await ctx.send(self._no_todo_message.format(prefix=ctx.clean_prefix))
         completed = []
+        indexes.sort(reverse=True)
         for index in indexes:
             try:
                 completed.append((todos.pop(index))["task"])
